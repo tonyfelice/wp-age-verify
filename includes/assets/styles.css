@@ -51,7 +51,6 @@
 
 /* Minimum width of 400 pixels. */
 @media screen and (min-width: 400px) {
-	
 	#av-overlay {
 		position: relative;
 		top: auto;
@@ -60,5 +59,32 @@
 		height: auto;
 		margin: 100px auto 0 auto;
 	}
-	
+}
+
+@media only screen and (max-width: 800px) {
+#av-overlay {
+   width: 75%;
+   margin: 20px auto 0px auto
+   }
+}
+
+
+.modal-open {
+  section {
+    -webkit-filter: blur(20px);
+    -moz-filter: blur(20px);
+    filter: blur(20px);
+  }
+}
+.modal-dialog {
+  .modal-content {
+    border-radius: 0;
+    box-shadow: none;
+    background-color: rgba(255,255,255,.9);
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+.modal-backdrop {
+  background-color: rgba(255,255,255,.6);
 }

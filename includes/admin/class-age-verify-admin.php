@@ -2,7 +2,7 @@
 /**
  * Define the admin class
  *
- * @since 0.2.6
+ * @since 0.0.1
  *
  * @package Age_Verify\Admin
  */
@@ -15,14 +15,14 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * The admin class.
  *
- * @since 0.2.6
+ * @since 0.0.1
  */
 final class Age_Verify_Admin {
 
 	/**
 	 * The only instance of this class.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 * @access protected
 	 */
 	protected static $instance = null;
@@ -30,7 +30,7 @@ final class Age_Verify_Admin {
 	/**
 	 * Get the only instance of this class.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @return object $instance The only instance of this class.
 	 */
@@ -46,7 +46,7 @@ final class Age_Verify_Admin {
 	/**
 	 * Prevent cloning of this class.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -57,7 +57,7 @@ final class Age_Verify_Admin {
 	/**
 	 * Prevent unserializing of this class.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -68,7 +68,7 @@ final class Age_Verify_Admin {
 	/**
 	 * Construct the class!
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -106,7 +106,7 @@ final class Age_Verify_Admin {
 	/**
 	 * Add to the settings page.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -124,7 +124,7 @@ final class Age_Verify_Admin {
 	/**
 	 * Add and register the settings sections and fields.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -189,7 +189,7 @@ final class Age_Verify_Admin {
 	/**
 	 * Add a direct link to the Age Verify settings page from the plugins page.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @param array  $actions The links beneath the plugin's name.
 	 * @param string $file    The plugin filename.
@@ -209,7 +209,7 @@ final class Age_Verify_Admin {
 	/**
 	 * Validates the color inputs from the settings.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @param  string $color A color hex.
 	 * @return string $color The validated color hex.
@@ -230,7 +230,7 @@ final class Age_Verify_Admin {
 	/**
 	 * Enqueue the scripts.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @param string $page The current admin page.
 	 * @return void
@@ -252,7 +252,7 @@ final class Age_Verify_Admin {
 	/**
 	 * Add a "restrict" checkbox to individual posts/pages.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -274,7 +274,7 @@ final class Age_Verify_Admin {
 	/**
 	 * Save the "restrict" checkbox value.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @param int $post_id The current post ID.
 	 * @return void

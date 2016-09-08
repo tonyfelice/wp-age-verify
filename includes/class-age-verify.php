@@ -2,7 +2,7 @@
 /**
  * Define the main plugin class
  *
- * @since 0.2.6
+ * @since 0.0.1
  *
  * @package Age_Verify
  */
@@ -15,21 +15,21 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * The main class.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
 final class Age_Verify {
 
 	/**
 	 * The plugin version.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 */
 	const VERSION = '0.3.0';
 
 	/**
 	 * The only instance of this class.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 * @access protected
 	 */
 	protected static $instance = null;
@@ -37,7 +37,7 @@ final class Age_Verify {
 	/**
 	 * Get the only instance of this class.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @return object $instance The only instance of this class.
 	 */
@@ -53,7 +53,7 @@ final class Age_Verify {
 	/**
 	 * Prevent cloning of this class.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -64,7 +64,7 @@ final class Age_Verify {
 	/**
 	 * Prevent unserializing of this class.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -75,7 +75,7 @@ final class Age_Verify {
 	/**
 	 * Construct the class!
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -95,7 +95,7 @@ final class Age_Verify {
 	/**
 	 * Require the necessary files.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -110,7 +110,7 @@ final class Age_Verify {
 	/**
 	 * Add the necessary action hooks.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -152,7 +152,7 @@ final class Age_Verify {
 	 *
 	 * Based on the bbPress implementation.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @return The textdomain or false on failure.
 	 */
@@ -179,7 +179,7 @@ final class Age_Verify {
 	/**
 	 * Enqueue the styles.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -191,7 +191,7 @@ final class Age_Verify {
 	/**
 	 * Print the custom colors, as defined in the admin.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -219,7 +219,7 @@ final class Age_Verify {
 	/**
 	 * Print the actual overlay if the visitor needs verification.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
@@ -259,7 +259,7 @@ final class Age_Verify {
 	/**
 	 * Hide the content if it is age restricted.
 	 *
-	 * @since 0.2.0
+	 * @since 0.0.1
 	 *
 	 * @param  string $content The object content.
 	 * @return string $content The object content or an age-restricted message if needed.
@@ -287,7 +287,7 @@ final class Age_Verify {
 	/**
 	 * Verify the visitor if the form was submitted.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @return void
 	 */
