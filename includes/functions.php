@@ -19,29 +19,29 @@ if ( ! defined( 'WPINC' ) ) {
  *
  * @return void
  */
-function av_rel_canonical() {
-    if ( strlen(get_option('_av_bypass')) >= 1 ) {
+function sag_rel_canonical() {
+    if ( strlen(get_option('_sag_bypass')) >= 1 ) {
         global $post;
-        $link = get_permalink($post->ID) . '?av=' . get_option('_av_bypass');
+        $link = get_permalink($post->ID) . '?av=' . get_option('_sag_bypass');
         echo "<link rel='canonical' href='$link' />\n";
     } else {
         rel_canonical();
     }
 }
 remove_action('wp_head', 'rel_canonical');
-add_action('wp_head', 'av_rel_canonical');
+add_action('wp_head', 'sag_rel_canonical');
 
 /**
  * Prints the minimum age.
  *
  * @since 0.0.1
- * @see   av_get_minimum_age();
+ * @see   sag_get_minimum_age();
  *
  * @return void
  */
-function av_minimum_age() {
+function sag_minimum_age() {
 
-	echo av_get_minimum_age();
+	echo sag_get_minimum_age();
 }
 
 /**
@@ -51,9 +51,9 @@ function av_minimum_age() {
  *
  * @return int $minimum_age The minimum age to view restricted content.
  */
-function av_get_minimum_age() {
+function sag_get_minimum_age() {
 
-	$minimum_age = get_option( '_av_minimum_age', 21 );
+	$minimum_age = get_option( '_sag_minimum_age', 21 );
 
 	/**
 	 * Filter the minimum age.
@@ -62,7 +62,7 @@ function av_get_minimum_age() {
 	 *
 	 * @param int $minimum_age The minimum age to view restricted content.
 	 */
-	$minimum_age = apply_filters( 'av_minimum_age', $minimum_age );
+	$minimum_age = apply_filters( 'sag_minimum_age', $minimum_age );
 
 	return (int) $minimum_age;
 }
@@ -77,7 +77,7 @@ function av_get_minimum_age() {
  * @param $day   $day   The visitor's birth day.
  * @return int $age The calculated age.
  */
-function av_get_visitor_age( $year, $month, $day ) {
+function sag_get_visitor_age( $year, $month, $day ) {
 
 	$age = 0;
 
@@ -121,9 +121,9 @@ function av_get_visitor_age( $year, $month, $day ) {
  *
  * @return int $cookie_duration The cookie duration.
  */
-function av_get_cookie_duration() {
+function sag_get_cookie_duration() {
 
-	$cookie_duration = get_option( '_av_cookie_duration', 720 );
+	$cookie_duration = get_option( '_sag_cookie_duration', 720 );
 
 	/**
 	 * Filter the cookie duration.
@@ -132,7 +132,7 @@ function av_get_cookie_duration() {
 	 *
 	 * @param int $cookie_duration The cookie duration.
 	 */
-	$cookie_duration = (int) apply_filters( 'av_cookie_duration', $cookie_duration );
+	$cookie_duration = (int) apply_filters( 'sag_cookie_duration', $cookie_duration );
 
 	return $cookie_duration;
 }
@@ -144,9 +144,9 @@ function av_get_cookie_duration() {
  *
  * @return bool $only_content_restricted Whether the restriction is content-specific or site-wide.
  */
-function av_only_content_restricted() {
+function sag_only_content_restricted() {
 
-	$only_content_restricted = ( 'content' == get_option( '_av_require_for' ) ) ? true : false;
+	$only_content_restricted = ( 'content' == get_option( '_sag_require_for' ) ) ? true : false;
 
 	/**
 	 * Filter whether the restriction is content-specific or site-wide.
@@ -155,7 +155,7 @@ function av_only_content_restricted() {
 	 *
 	 * @param bool $only_content_restricted
 	 */
-	$only_content_restricted = apply_filters( 'av_only_content_restricted', $only_content_restricted );
+	$only_content_restricted = apply_filters( 'sag_only_content_restricted', $only_content_restricted );
 
 	return (bool) $only_content_restricted;
 }
@@ -167,13 +167,13 @@ function av_only_content_restricted() {
  *
  * @return bool $is_restricted Whether a certain piece of content is restricted.
  */
-function av_content_is_restricted( $id = null ) {
+function sag_content_is_restricted( $id = null ) {
 
 	if ( is_null( $id ) ) {
 		$id = get_the_ID();
 	}
 
-	$is_restricted = ( 1 == get_post_meta( $id, '_av_needs_verify', true ) ) ? true : false;
+	$is_restricted = ( 1 == get_post_meta( $id, '_sag_needs_verify', true ) ) ? true : false;
 
 	/**
 	 * Filter whether this content should be restricted.
@@ -183,7 +183,7 @@ function av_content_is_restricted( $id = null ) {
 	 * @param bool $is_restricted Whether this content should be restricted.
 	 * @param int  $id            The content's ID.
 	 */
-	$is_restricted = apply_filters( 'av_is_restricted', $is_restricted, $id );
+	$is_restricted = apply_filters( 'sag_is_restricted', $is_restricted, $id );
 
 	return $is_restricted;
 }
@@ -194,18 +194,18 @@ function av_content_is_restricted( $id = null ) {
  *
  * @since 0.0.1* @return bool
  */
-function av_needs_verification() {
+function sag_needs_verification() {
 
 	// Assume the visitor needs to be verified
 	$return = true;
 
 	// If the site is restricted on a per-content basis, let 'em through
-	if ( av_only_content_restricted() ) :
+	if ( sag_only_content_restricted() ) :
 
 		$return = false;
 
 		// If the content being viewed is restricted, throw up the form
-		if ( is_singular() && av_content_is_restricted() )
+		if ( is_singular() && sag_content_is_restricted() )
 			$return = true;
 
 	endif;
@@ -218,12 +218,12 @@ function av_needs_verification() {
 	}
 
 	// If logged in users are exempt, and the visitor is logged in, let 'em through
-	if ( get_option( '_av_always_verify', 'guests' ) == 'guests' && is_user_logged_in() ){
+	if ( get_option( '_sag_always_verify', 'guests' ) == 'guests' && is_user_logged_in() ){
 		$return = false;
 	}
 
 	// If the bypass variable is set to allow search engine spiders through, let em
-	if (  strpos($_SERVER["QUERY_STRING"], get_option('_av_bypass') ) !== false  ){
+	if (  strpos($_SERVER["QUERY_STRING"], get_option('_sag_bypass') ) !== false  ){
 		// set a cookie, so that only the first page needs to show the bypass variable
 		setcookie( 'age-verified', 1, time()+(86400*30), COOKIEPATH, COOKIE_DOMAIN, false );
 		// let em through
@@ -235,7 +235,7 @@ function av_needs_verification() {
 		$return = false;
 	}
 
-	return (bool) apply_filters( 'av_needs_verification', $return );
+	return (bool) apply_filters( 'sag_needs_verification', $return );
 }
 
 
@@ -248,9 +248,9 @@ function av_needs_verification() {
  *
  * @since 0.0.1* @echo string
  */
-function av_the_heading() {
+function sag_the_heading() {
 
-	echo av_get_the_heading();
+	echo sag_get_the_heading();
 }
 
 /**
@@ -258,9 +258,9 @@ function av_the_heading() {
  *
  * @since 0.0.1* @return string
  */
-function av_get_the_heading() {
+function sag_get_the_heading() {
 
-	return sprintf( apply_filters( 'av_heading', get_option( '_av_heading', __( 'You must be %s years old to visit this site.', 'age-verify' ) ) ), av_get_minimum_age() );
+	return sprintf( apply_filters( 'sag_heading', get_option( '_sag_heading', __( 'You must be %s years old to visit this site.', 'seo-age-gate' ) ) ), sag_get_minimum_age() );
 }
 
 /**
@@ -268,9 +268,9 @@ function av_get_the_heading() {
  *
  * @since 0.0.1* @echo string
  */
-function av_the_desc() {
+function sag_the_desc() {
 
-	echo av_get_the_desc();
+	echo sag_get_the_desc();
 }
 
 /**
@@ -279,9 +279,9 @@ function av_the_desc() {
  *
  * @since 0.0.1* @return string|false
  */
-function av_get_the_desc() {
+function sag_get_the_desc() {
 
-	$desc = apply_filters( 'av_description', get_option( '_av_description', __( 'Please verify your age', 'age-verify' ) ) );
+	$desc = apply_filters( 'sag_description', get_option( '_sag_description', __( 'Please verify your age', 'seo-age-gate' ) ) );
 
 	if ( ! empty( $desc ) )
 		return $desc;
@@ -295,9 +295,9 @@ function av_get_the_desc() {
  *
  * @since 0.0.1* @return string
  */
-function av_get_input_type() {
+function sag_get_input_type() {
 
-	return apply_filters( 'av_input_type', get_option( '_av_input_type', 'dropdowns' ) );
+	return apply_filters( 'sag_input_type', get_option( '_sag_input_type', 'dropdowns' ) );
 }
 
 /**
@@ -306,14 +306,14 @@ function av_get_input_type() {
  *
  * @since 0.0.1* @return string
  */
-function av_get_overlay_color() {
+function sag_get_overlay_color() {
 
-	if ( get_option( '_av_overlay_color' ) )
-		$color = get_option( '_av_overlay_color' );
+	if ( get_option( '_sag_overlay_color' ) )
+		$color = get_option( '_sag_overlay_color' );
 	else
 		$color = 'fff';
 
-	return apply_filters( 'av_overlay_color', $color );
+	return apply_filters( 'sag_overlay_color', $color );
 }
 
 /**
@@ -322,19 +322,19 @@ function av_get_overlay_color() {
  *
  * @since 0.0.1* @return string
  */
-function av_get_background_color() {
+function sag_get_background_color() {
 
 	if ( current_theme_supports( 'custom-background' ) )
 		$default = get_background_color();
 	else
 		$default = 'e6e6e6';
 
-	if ( get_option( '_av_bgcolor' ) )
-		$color = get_option( '_av_bgcolor' );
+	if ( get_option( '_sag_bgcolor' ) )
+		$color = get_option( '_sag_bgcolor' );
 	else
 		$color = $default;
 
-	return apply_filters( 'av_background_color', $color );
+	return apply_filters( 'sag_background_color', $color );
 }
 
 /**
@@ -342,9 +342,9 @@ function av_get_background_color() {
  *
  * @since 0.0.1* @echo string
  */
-function av_verify_form() {
+function sag_verify_form() {
 
-	echo av_get_verify_form();
+	echo sag_get_verify_form();
 }
 
 /**
@@ -353,15 +353,15 @@ function av_verify_form() {
  *
  * @since 0.0.1* @return string
  */
-function av_get_verify_form() {
+function sag_get_verify_form() {
 
-	$input_type = av_get_input_type();
+	$input_type = sag_get_input_type();
 
-	$submit_button_label = apply_filters( 'av_form_submit_label', __( 'Enter Site &raquo;', 'age-verify' ) );
+	$submit_button_label = apply_filters( 'sag_form_submit_label', __( 'Enter Site &raquo;', 'seo-age-gate' ) );
 
 	$form = '';
 
-	$form .= '<form id="av_verify_form" action="' . esc_url( home_url( '/' ) ) . '" method="post">';
+	$form .= '<form id="sag_verify_form" action="' . esc_url( home_url( '/' ) ) . '" method="post">';
 
 
 	/* Parse the errors, if any */
@@ -370,35 +370,35 @@ function av_get_verify_form() {
 	if ( $error ) :
 
 		// Catch-all error
-		$error_string = apply_filters( 'av_error_text_general', __( 'Sorry, something must have gone wrong. Please try again', 'age-verify' ) );
+		$error_string = apply_filters( 'sag_error_text_general', __( 'Sorry, something must have gone wrong. Please try again', 'seo-age-gate' ) );
 
 		// Visitor didn't check the box (only for the simple checkbox form)
 		if ( $error == 2 )
-			$error_string = apply_filters( 'av_error_text_not_checked', __( 'Check the box to confirm your age before continuing', 'age-verify' ) );
+			$error_string = apply_filters( 'sag_error_text_not_checked', __( 'Check the box to confirm your age before continuing', 'seo-age-gate' ) );
 
 		// Visitor isn't old enough
 		if ( $error == 3 )
-			$error_string = apply_filters( 'av_error_text_too_young', __( 'Sorry, it doesn\'t look like you\'re old enough', 'age-verify' ) );
+			$error_string = apply_filters( 'sag_error_text_too_young', __( 'Sorry, it doesn\'t look like you\'re old enough', 'seo-age-gate' ) );
 
 		// Visitor entered an invalid date
 		if ( $error == 4 )
-			$error_string = apply_filters( 'av_error_text_bad_date', __( 'Please enter a valid date', 'age-verify' ) );
+			$error_string = apply_filters( 'sag_error_text_bad_date', __( 'Please enter a valid date', 'seo-age-gate' ) );
 
 		$form .= '<p class="error">' . esc_html( $error_string ) . '</p>';
 
 	endif;
 
-	do_action( 'av_form_before_inputs' );
+	do_action( 'sag_form_before_inputs' );
 
 	// Add a sweet nonce. So sweet.
-	$form .= wp_nonce_field( 'verify-age', 'av-nonce' );
+	$form .= wp_nonce_field( 'verify-age', 'sag-nonce' );
 
 	switch ( $input_type ) {
 
 		// If set to date dropdowns
 		case 'dropdowns' :
 
-			$form .= '<p><select name="av_verify_m" id="av_verify_m">';
+			$form .= '<p><select name="sag_verify_m" id="sag_verify_m">';
 
 				foreach ( range( 1, 12 ) as $month ) :
 
@@ -408,7 +408,7 @@ function av_get_verify_form() {
 
 				endforeach;
 
-			$form .= '</select> - <select name="av_verify_d" id="av_verify_d">';
+			$form .= '</select> - <select name="sag_verify_d" id="sag_verify_d">';
 
 				foreach ( range( 1, 31 ) as $day ) :
 
@@ -416,7 +416,7 @@ function av_get_verify_form() {
 
 				endforeach;
 
-			$form .= '</select> - <select name="av_verify_y" id="av_verify_y">';
+			$form .= '</select> - <select name="sag_verify_y" id="sag_verify_y">';
 
 				foreach ( range( 1910, date( 'Y' ) ) as $year ) :
 
@@ -433,30 +433,30 @@ function av_get_verify_form() {
 		// If set to date inputs
 		case 'inputs' :
 
-			$form .= '<p><input type="text" name="av_verify_m" id="av_verify_m" maxlength="2" value="" placeholder="MM" /> - <input type="text" name="av_verify_d" id="av_verify_d" maxlength="2" value="" placeholder="DD" /> - <input type="text" name="av_verify_y" id="av_verify_y" maxlength="4" value="" placeholder="YYYY" /></p>';
+			$form .= '<p><input type="text" name="sag_verify_m" id="sag_verify_m" maxlength="2" value="" placeholder="MM" /> - <input type="text" name="sag_verify_d" id="sag_verify_d" maxlength="2" value="" placeholder="DD" /> - <input type="text" name="sag_verify_y" id="sag_verify_y" maxlength="4" value="" placeholder="YYYY" /></p>';
 
 			break;
 
 		// If just a simple checkbox
 		case 'checkbox' :
 
-			$form .= '<p><label for="av_verify_confirm"><input type="checkbox" name="av_verify_confirm" id="av_verify_confirm" value="1" /> ';
+			$form .= '<p><label for="sag_verify_confirm"><input type="checkbox" name="sag_verify_confirm" id="sag_verify_confirm" value="1" /> ';
 
-			$form .= esc_html( sprintf( apply_filters( 'av_confirm_text', __( 'I am at least %s years old', 'age-verify' ) ), av_get_minimum_age() ) ) . '</label></p>';
+			$form .= esc_html( sprintf( apply_filters( 'sag_confirm_text', __( 'I am at least %s years old', 'seo-age-gate' ) ), sag_get_minimum_age() ) ) . '</label></p>';
 
 			break;
 
 	};
 
-	do_action( 'av_form_after_inputs' );
+	do_action( 'sag_form_after_inputs' );
 
-	$form .= '<p class="submit"><label for="av_verify_remember"><input type="checkbox" name="av_verify_remember" id="av_verify_remember" value="1" /> ' . esc_html__( 'Remember me', 'age-verify' ) . '</label> ';
+	$form .= '<p class="submit"><label for="sag_verify_remember"><input type="checkbox" name="sag_verify_remember" id="sag_verify_remember" value="1" /> ' . esc_html__( 'Remember me', 'seo-age-gate' ) . '</label> ';
 
-	$form .= '<input type="submit" name="av_verify" id="av_verify" value="' . esc_attr( $submit_button_label ) . '" /></p>';
+	$form .= '<input type="submit" name="sag_verify" id="sag_verify" value="' . esc_attr( $submit_button_label ) . '" /></p>';
 
 	$form .= '</form>';
 
-	return apply_filters( 'av_verify_form', $form );
+	return apply_filters( 'sag_verify_form', $form );
 }
 
 
@@ -470,14 +470,14 @@ function av_get_verify_form() {
  *
  * @since 0.0.1* @return bool
  */
-function av_confirmation_required() {
+function sag_confirmation_required() {
 
-	if ( get_option( '_av_membership', 1 ) == 1 )
+	if ( get_option( '_sag_membership', 1 ) == 1 )
 		$return = true;
 	else
 		$return = false;
 
-	return (bool) apply_filters( 'av_confirmation_required', $return );
+	return (bool) apply_filters( 'sag_confirmation_required', $return );
 }
 
 /**
@@ -486,11 +486,11 @@ function av_confirmation_required() {
  *
  * @since 0.0.1* @echo string
  */
-function av_register_form() {
+function sag_register_form() {
 
-	$text = '<p class="age-verify"><label for="_av_confirm_age"><input type="checkbox" name="_av_confirm_age" id="_av_confirm_age" value="1" /> ';
+	$text = '<p class="seo-age-gate"><label for="_sag_confirm_age"><input type="checkbox" name="_sag_confirm_age" id="_sag_confirm_age" value="1" /> ';
 
-	$text .= esc_html( sprintf( apply_filters( 'av_registration_text', __( 'I am at least %s years old', 'age-verify' ) ), av_get_minimum_age() ) );
+	$text .= esc_html( sprintf( apply_filters( 'sag_registration_text', __( 'I am at least %s years old', 'seo-age-gate' ) ), sag_get_minimum_age() ) );
 
 	$text .= '</label></p><br />';
 
@@ -503,8 +503,8 @@ function av_register_form() {
  *
  * @since 0.0.1* @return bool
  */
-function av_register_check( $login, $email, $errors ) {
+function sag_register_check( $login, $email, $errors ) {
 
-	if ( ! isset( $_POST['_av_confirm_age'] ) )
-		$errors->add( 'empty_age_confirm', '<strong>ERROR</strong>: ' . apply_filters( 'av_registration_error', __( 'Please confirm your age', 'age-verify' ) ) );
+	if ( ! isset( $_POST['_sag_confirm_age'] ) )
+		$errors->add( 'empty_age_confirm', '<strong>ERROR</strong>: ' . apply_filters( 'sag_registration_error', __( 'Please confirm your age', 'seo-age-gate' ) ) );
 }

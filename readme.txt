@@ -1,9 +1,9 @@
-=== Age Verify ===
+=== SEO Age Gate ===
 Contributors: tonyfelice
-Tags: age, restrict, verify
+Tags: age, restrict, verify, gate
 Requires at least: 3.2
 Tested up to: 4.4.1
-Stable tag: 0.0.2
+Stable tag: 0.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,9 +15,9 @@ Typical age gate.  This verification/compliance tool is search-engine friendly. 
 
 == Installation ==
 
-1. Upload the 'age-verify' folder to the '/wp-content/plugins/' directory
+1. Upload the 'seo-age-gate' folder to the '/wp-content/plugins/' directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Visit 'Settings > Age Verify' and adjust your configuration.
+3. Visit 'Settings > SEO Age Gate' and adjust your configuration.
 
 == Screenshots ==
 
@@ -25,6 +25,9 @@ Typical age gate.  This verification/compliance tool is search-engine friendly. 
 2. This is what your visitors see, using the default styling.
 
 == Changelog ==
+
+= 0.0.3 =
+* renamed to avoid conflict with fork source
 
 = 0.0.2 =
 * Set bypass variable; override rel_canonical(); detect bypass querystring; store in session cookie

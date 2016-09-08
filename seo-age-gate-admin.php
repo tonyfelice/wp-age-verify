@@ -10,12 +10,12 @@
  */
 
 /**
- * Plugin Name: Age Verify
+ * Plugin Name: SEO Age Gate
  * Description: A simple way to ask visitors for their age before viewing your site.
  * Author:      Tony Felice
  * Author URI:  http://tonyfelice.co
- * Version:     0.0.2
- * Text Domain: age-verify
+ * Version:     0.0.3
+ * Text Domain: seo-age-gate
  * Domain Path: /languages
  */
 
@@ -27,7 +27,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * The main class definition.
  */
-require( plugin_dir_path( __FILE__ ) . 'includes/class-age-verify.php' );
+require( plugin_dir_path( __FILE__ ) . 'includes/class-seo-age-gate.php' );
 
 // Get the plugin running.
 add_action( 'plugins_loaded', array( 'Age_Verify', 'get_instance' ) );
@@ -38,7 +38,7 @@ if ( is_admin() ) {
 	/**
 	 * The admin class definition.
 	 */
-	require( plugin_dir_path( __FILE__ ) . 'includes/admin/class-age-verify-admin.php' );
+	require( plugin_dir_path( __FILE__ ) . 'includes/admin/class-seo-age-gate-admin.php' );
 
 	// Get the plugin's admin running.
 	add_action( 'plugins_loaded', array( 'Age_Verify_Admin', 'get_instance' ) );

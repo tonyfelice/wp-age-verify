@@ -58,7 +58,7 @@ final class Age_Verify {
 	 * @return void
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'age-verify' ), self::VERSION );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'seo-age-gate' ), self::VERSION );
 	}
 
 	/**
@@ -69,7 +69,7 @@ final class Age_Verify {
 	 * @return void
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'age-verify' ), self::VERSION );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'seo-age-gate' ), self::VERSION );
 	}
 
 	/**
@@ -120,7 +120,7 @@ final class Age_Verify {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 
 		// If checked in the settings, load the default and custom styles.
-		if ( get_option( '_av_styling', 1 ) == 1 ) {
+		if ( get_option( '_sag_styling', 1 ) == 1 ) {
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 
@@ -138,11 +138,11 @@ final class Age_Verify {
 		add_action( 'template_redirect', array( $this, 'verify' ) );
 
 		// If checked in the settings, add to the registration form.
-		if ( av_confirmation_required() ) {
+		if ( sag_confirmation_required() ) {
 
-			add_action( 'register_form', 'av_register_form' );
+			add_action( 'register_form', 'sag_register_form' );
 
-			add_action( 'register_post', 'av_register_check', 10, 3 );
+			add_action( 'register_post', 'sag_register_check', 10, 3 );
 
 		}
 	}
@@ -159,19 +159,19 @@ final class Age_Verify {
 	public function load_textdomain() {
 
 		$locale = get_locale();
-		$locale = apply_filters( 'plugin_locale',  $locale, 'age-verify' );
-		$mofile = sprintf( 'age-verify-%s.mo', $locale );
+		$locale = apply_filters( 'plugin_locale',  $locale, 'seo-age-gate' );
+		$mofile = sprintf( 'seo-age-gate-%s.mo', $locale );
 
 		$mofile_local  = plugin_dir_path( dirname( __FILE__ ) ) . 'languages/' . $mofile;
-		$mofile_global = WP_LANG_DIR . '/age-verify/' . $mofile;
+		$mofile_global = WP_LANG_DIR . '/seo-age-gate/' . $mofile;
 
 		if ( file_exists( $mofile_local ) )
-			return load_textdomain( 'age-verify', $mofile_local );
+			return load_textdomain( 'seo-age-gate', $mofile_local );
 
 		if ( file_exists( $mofile_global ) )
-			return load_textdomain( 'age-verify', $mofile_global );
+			return load_textdomain( 'seo-age-gate', $mofile_global );
 
-		load_plugin_textdomain( 'age-verify' );
+		load_plugin_textdomain( 'seo-age-gate' );
 
 		return false;
 	}
@@ -185,7 +185,7 @@ final class Age_Verify {
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( 'av-styles', plugin_dir_url( __FILE__ ) . 'assets/styles.css' );
+		wp_enqueue_style( 'sag-styles', plugin_dir_url( __FILE__ ) . 'assets/styles.css' );
 	}
 
 	/**
@@ -199,12 +199,12 @@ final class Age_Verify {
 
 		<style type="text/css">
 
-			#av-overlay-wrap {
-				background: #<?php echo esc_attr( av_get_background_color() ); ?>;
+			#sag-overlay-wrap {
+				background: #<?php echo esc_attr( sag_get_background_color() ); ?>;
 			}
 
-			#av-overlay {
-				background: #<?php echo esc_attr( av_get_overlay_color() ); ?>;
+			#sag-overlay {
+				background: #<?php echo esc_attr( sag_get_overlay_color() ); ?>;
 			}
 
 		</style>
@@ -213,7 +213,7 @@ final class Age_Verify {
 		/**
 		* Trigger action after setting the custom color styles.
 		*/
-		do_action( 'av_custom_styles' );
+		do_action( 'sag_custom_styles' );
 	}
 
 	/**
@@ -225,33 +225,33 @@ final class Age_Verify {
 	 */
 	public function verify_overlay() {
 
-		if ( ! av_needs_verification() ) {
+		if ( ! sag_needs_verification() ) {
 			return;
 		}
 
 		// Disable page caching by W3 Total Cache.
 		define( 'DONOTCACHEPAGE', true ); ?>
 
-		<div id="av-overlay-wrap">
+		<div id="sag-overlay-wrap">
 
-			<?php do_action( 'av_before_modal' ); ?>
+			<?php do_action( 'sag_before_modal' ); ?>
 
-			<div id="av-overlay">
+			<div id="sag-overlay">
 
-				<h1><?php esc_html_e( av_get_the_heading() ); ?></h1>
+				<h1><?php esc_html_e( sag_get_the_heading() ); ?></h1>
 
-				<?php if ( av_get_the_desc() )
-					echo '<p>' . esc_html( av_get_the_desc() ). '</p>'; ?>
+				<?php if ( sag_get_the_desc() )
+					echo '<p>' . esc_html( sag_get_the_desc() ). '</p>'; ?>
 
-				<?php do_action( 'av_before_form' ); ?>
+				<?php do_action( 'sag_before_form' ); ?>
 
-				<?php av_verify_form(); ?>
+				<?php sag_verify_form(); ?>
 
-				<?php do_action( 'av_after_form' ); ?>
+				<?php do_action( 'sag_after_form' ); ?>
 
 			</div>
 
-			<?php do_action( 'av_after_modal' ); ?>
+			<?php do_action( 'sag_after_modal' ); ?>
 
 		</div>
 	<?php }
@@ -266,7 +266,7 @@ final class Age_Verify {
 	 */
 	 public function restrict_content( $content ) {
 
-		if ( ! av_only_content_restricted() ) {
+		if ( ! sag_only_content_restricted() ) {
 			return $content;
 		}
 
@@ -274,12 +274,12 @@ final class Age_Verify {
 			return $content;
 		}
 
-		if ( ! av_content_is_restricted() ) {
+		if ( ! sag_content_is_restricted() ) {
 			return $content;
 		}
 
-		return sprintf( apply_filters( 'av_restricted_content_message', __( 'You must be %1s years old to view this content.', 'age-verify' ) . ' <a href="%2s">' . __( 'Please verify your age', 'age-verify' ) . '</a>.' ),
-			esc_html( av_get_minimum_age() ),
+		return sprintf( apply_filters( 'sag_restricted_content_message', __( 'You must be %1s years old to view this content.', 'seo-age-gate' ) . ' <a href="%2s">' . __( 'Please verify your age', 'seo-age-gate' ) . '</a>.' ),
+			esc_html( sag_get_minimum_age() ),
 			esc_url( get_permalink( get_the_ID() ) )
 		);
 	 }
@@ -293,7 +293,7 @@ final class Age_Verify {
 	 */
 	public function verify() {
 
-		if ( ! isset( $_POST['av-nonce'] ) || ! wp_verify_nonce( $_POST['av-nonce'], 'verify-age' ) )
+		if ( ! isset( $_POST['sag-nonce'] ) || ! wp_verify_nonce( $_POST['sag-nonce'], 'verify-age' ) )
 			return;
 
 		$redirect_url = remove_query_arg( array( 'age-verified', 'verify-error' ), wp_get_referer() );
@@ -302,14 +302,14 @@ final class Age_Verify {
 
 		$error = 1; // Catch-all in case something goes wrong
 
-		$input_type   = av_get_input_type();
+		$input_type   = sag_get_input_type();
 
 		switch ( $input_type ) {
 
 
 			case 'checkbox' :
 
-				if ( isset( $_POST['av_verify_confirm'] ) && (int) $_POST['av_verify_confirm'] == 1 )
+				if ( isset( $_POST['sag_verify_confirm'] ) && (int) $_POST['sag_verify_confirm'] == 1 )
 					$is_verified = true;
 				else
 					$error = 2; // Didn't check the box
@@ -318,11 +318,11 @@ final class Age_Verify {
 
 			default :
 
-				if ( checkdate( (int) $_POST['av_verify_m'], (int) $_POST['av_verify_d'], (int) $_POST['av_verify_y'] ) ) :
+				if ( checkdate( (int) $_POST['sag_verify_m'], (int) $_POST['sag_verify_d'], (int) $_POST['sag_verify_y'] ) ) :
 
-					$age = av_get_visitor_age( $_POST['av_verify_y'], $_POST['av_verify_m'], $_POST['av_verify_d'] );
+					$age = sag_get_visitor_age( $_POST['sag_verify_y'], $_POST['sag_verify_m'], $_POST['sag_verify_d'] );
 
-				    if ( $age >= av_get_minimum_age() )
+				    if ( $age >= sag_get_minimum_age() )
 						$is_verified = true;
 					else
 						$error = 3; // Not old enough
@@ -336,14 +336,14 @@ final class Age_Verify {
 				break;
 		}
 
-		$is_verified = apply_filters( 'av_passed_verify', $is_verified );
+		$is_verified = apply_filters( 'sag_passed_verify', $is_verified );
 
 		if ( $is_verified == true ) :
 
-			do_action( 'av_was_verified' );
+			do_action( 'sag_was_verified' );
 
-			if ( isset( $_POST['av_verify_remember'] ) )
-				$cookie_duration = time() +  ( av_get_cookie_duration() * 60 );
+			if ( isset( $_POST['sag_verify_remember'] ) )
+				$cookie_duration = time() +  ( sag_get_cookie_duration() * 60 );
 			else
 				$cookie_duration = 0;
 
@@ -354,7 +354,7 @@ final class Age_Verify {
 
 		else :
 
-			do_action( 'av_was_not_verified' );
+			do_action( 'sag_was_not_verified' );
 
 			wp_redirect( esc_url_raw( add_query_arg( 'verify-error', $error, $redirect_url ) ) );
 			exit;

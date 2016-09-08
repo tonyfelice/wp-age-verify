@@ -1,4 +1,4 @@
-#av-overlay-wrap { 
+#sag-overlay-wrap { 
 	position: fixed; 
 	height: 100%;
 	width: 100%;
@@ -9,7 +9,7 @@
 	left: 0; 
 }
 
-#av-overlay {
+#sag-overlay {
 	position: fixed; 
 	top: 0;
 	left: 0;
@@ -22,25 +22,25 @@
 	   -moz-box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
 	        box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
 }
-#av-overlay h1 {
+#sag-overlay h1 {
 	margin-bottom: 20px;
 }
-#av-overlay p {
+#sag-overlay p {
 	margin-bottom: 10px;
 }
-#av-overlay .submit {
+#sag-overlay .submit {
 	margin-bottom: 0;
 }
 
-#av-overlay input[type=text] {
+#sag-overlay input[type=text] {
 	width: 50px;
 	outline: none;
 }
-#av-overlay #av_verify_y {
+#sag-overlay #sag_verify_y {
 	width: 70px;
 }
 
-#av-overlay .error {
+#sag-overlay .error {
 	padding: 12px;
 	background-color: #ffebe8;
 	border: 1px solid #c00;
@@ -51,7 +51,7 @@
 
 /* Minimum width of 400 pixels. */
 @media screen and (min-width: 400px) {
-	#av-overlay {
+	#sag-overlay {
 		position: relative;
 		top: auto;
 		left: auto;
@@ -62,7 +62,7 @@
 }
 
 @media only screen and (max-width: 800px) {
-#av-overlay {
+#sag-overlay {
    width: 75%;
    margin: 20px auto 0px auto
    }
