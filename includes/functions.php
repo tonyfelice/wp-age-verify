@@ -2,7 +2,7 @@
 /**
  * Define the supporting functions.
  *
- * @since 0.2.6
+ * @since 0.0.1
  *
  * @package Age_Verify\Functions
  */
@@ -13,9 +13,28 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
+ * Overrides the default wp rel_canonical if bypass variable is set
+ *
+ * @since 0.0.1
+ *
+ * @return void
+ */
+function av_rel_canonical() {
+    if ( strlen(get_option('_av_bypass')) >= 1 ) {
+        global $post;
+        $link = get_permalink($post->ID) . '?av=' . get_option('_av_bypass');
+        echo "<link rel='canonical' href='$link' />\n";
+    } else {
+        rel_canonical();
+    }
+}
+remove_action('wp_head', 'rel_canonical');
+add_action('wp_head', 'av_rel_canonical');
+
+/**
  * Prints the minimum age.
  *
- * @since 0.1.0
+ * @since 0.0.1
  * @see   av_get_minimum_age();
  *
  * @return void
@@ -28,7 +47,7 @@ function av_minimum_age() {
 /**
  * Get the minimum age to view restricted content.
  *
- * @since 0.1.0
+ * @since 0.0.1
  *
  * @return int $minimum_age The minimum age to view restricted content.
  */
@@ -39,7 +58,7 @@ function av_get_minimum_age() {
 	/**
 	 * Filter the minimum age.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @param int $minimum_age The minimum age to view restricted content.
 	 */
@@ -51,7 +70,7 @@ function av_get_minimum_age() {
 /**
  * Get the visitor's age based on input.
  *
- * @since 0.1.5
+ * @since 0.0.1
  *
  * @param string $year  The visitor's birth year.
  * @param string $month The visitor's birth month.
@@ -98,7 +117,7 @@ function av_get_visitor_age( $year, $month, $day ) {
  * This lets us know how long to keep a visitor's
  * verified cookie.
  *
- * @since 0.1.0
+ * @since 0.0.1
  *
  * @return int $cookie_duration The cookie duration.
  */
@@ -109,7 +128,7 @@ function av_get_cookie_duration() {
 	/**
 	 * Filter the cookie duration.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @param int $cookie_duration The cookie duration.
 	 */
@@ -121,7 +140,7 @@ function av_get_cookie_duration() {
 /**
  * Determines whether only certain content should be restricted.
  *
- * @since 0.2.0
+ * @since 0.0.1
  *
  * @return bool $only_content_restricted Whether the restriction is content-specific or site-wide.
  */
@@ -132,7 +151,7 @@ function av_only_content_restricted() {
 	/**
 	 * Filter whether the restriction is content-specific or site-wide.
 	 *
-	 * @since 0.2.0
+	 * @since 0.0.1
 	 *
 	 * @param bool $only_content_restricted
 	 */
@@ -144,7 +163,7 @@ function av_only_content_restricted() {
 /**
  * Determines if a certain piece of content is restricted.
  *
- * @since 0.2.0
+ * @since 0.0.1
  *
  * @return bool $is_restricted Whether a certain piece of content is restricted.
  */
@@ -159,7 +178,7 @@ function av_content_is_restricted( $id = null ) {
 	/**
 	 * Filter whether this content should be restricted.
 	 *
-	 * @since 0.2.6
+	 * @since 0.0.1
 	 *
 	 * @param bool $is_restricted Whether this content should be restricted.
 	 * @param int  $id            The content's ID.
@@ -173,8 +192,7 @@ function av_content_is_restricted( $id = null ) {
  * This is the very important function that determines if a given visitor
  * needs to be verified before viewing the site. You can filter this if you like.
  *
- * @since 0.1
- * @return bool
+ * @since 0.0.1* @return bool
  */
 function av_needs_verification() {
 
@@ -195,20 +213,27 @@ function av_needs_verification() {
 	// Check that the form was at least submitted. This lets visitors through that have cookies disabled.
 	$nonce = ( isset( $_REQUEST['age-verified'] ) ) ? $_REQUEST['age-verified'] : '';
 
-	if ( wp_verify_nonce( $nonce, 'age-verified' ) )
+	if ( wp_verify_nonce( $nonce, 'age-verified' ) ){
 		$return = false;
+	}
 
 	// If logged in users are exempt, and the visitor is logged in, let 'em through
-	if ( get_option( '_av_always_verify', 'guests' ) == 'guests' && is_user_logged_in() )
+	if ( get_option( '_av_always_verify', 'guests' ) == 'guests' && is_user_logged_in() ){
 		$return = false;
+	}
 
 	// If the bypass variable is set to allow search engine spiders through, let em
-	if (  strpos($_SERVER["QUERY_STRING"], get_option('_av_bypass') ) !== false  )
+	if (  strpos($_SERVER["QUERY_STRING"], get_option('_av_bypass') ) !== false  ){
+		// set a cookie, so that only the first page needs to show the bypass variable
+		setcookie( 'age-verified', 1, time()+(86400*30), COOKIEPATH, COOKIE_DOMAIN, false );
+		// let em through
 		$return = false;
+	}
 
 	// Or, if there is a valid cookie let 'em through
-	if ( isset( $_COOKIE['age-verified'] ) )
+	if ( isset( $_COOKIE['age-verified'] ) ){
 		$return = false;
+	}
 
 	return (bool) apply_filters( 'av_needs_verification', $return );
 }
@@ -221,8 +246,7 @@ function av_needs_verification() {
 /**
  * Echoes the overlay heading
  *
- * @since 0.1
- * @echo string
+ * @since 0.0.1* @echo string
  */
 function av_the_heading() {
 
@@ -232,8 +256,7 @@ function av_the_heading() {
 /**
  * Returns the overlay heading. You can filter this if you like.
  *
- * @since 0.1
- * @return string
+ * @since 0.0.1* @return string
  */
 function av_get_the_heading() {
 
@@ -243,8 +266,7 @@ function av_get_the_heading() {
 /**
  * Echoes the overlay description, which lives below the heading and above the form.
  *
- * @since 0.1
- * @echo string
+ * @since 0.0.1* @echo string
  */
 function av_the_desc() {
 
@@ -255,8 +277,7 @@ function av_the_desc() {
  * Returns the overlay description, which lives below the heading and above the form.
  * You can filter this if you like.
  *
- * @since 0.1
- * @return string|false
+ * @since 0.0.1* @return string|false
  */
 function av_get_the_desc() {
 
@@ -272,8 +293,7 @@ function av_get_the_desc() {
  * Returns the form's input type, based on the settings.
  * You can filter this if you like.
  *
- * @since 0.1
- * @return string
+ * @since 0.0.1* @return string
  */
 function av_get_input_type() {
 
@@ -284,8 +304,7 @@ function av_get_input_type() {
  * Returns the overlay box's background color
  * You can filter this if you like.
  *
- * @since 0.1
- * @return string
+ * @since 0.0.1* @return string
  */
 function av_get_overlay_color() {
 
@@ -301,8 +320,7 @@ function av_get_overlay_color() {
  * Returns the overlay's background color
  * You can filter this if you like.
  *
- * @since 0.1
- * @return string
+ * @since 0.0.1* @return string
  */
 function av_get_background_color() {
 
@@ -322,8 +340,7 @@ function av_get_background_color() {
 /**
  * Echoes the actual form
  *
- * @since 0.1
- * @echo string
+ * @since 0.0.1* @echo string
  */
 function av_verify_form() {
 
@@ -334,8 +351,7 @@ function av_verify_form() {
  * Returns the all-important verification form.
  * You can filter this if you like.
  *
- * @since 0.1
- * @return string
+ * @since 0.0.1* @return string
  */
 function av_get_verify_form() {
 
@@ -452,8 +468,7 @@ function av_get_verify_form() {
  * Determines whether or not users need to verify their age before
  * registering for the site. You can filter this if you like.
  *
- * @since 0.1
- * @return bool
+ * @since 0.0.1* @return bool
  */
 function av_confirmation_required() {
 
@@ -469,8 +484,7 @@ function av_confirmation_required() {
  * Adds a checkbox to the default WordPress registration form for
  * users to verify their ages. You can filter the text if you like.
  *
- * @since 0.1
- * @echo string
+ * @since 0.0.1* @echo string
  */
 function av_register_form() {
 
@@ -487,8 +501,7 @@ function av_register_form() {
  * Make sure the user checked the box when registering.
  * If not, print an error. You can filter the error's text if you like.
  *
- * @since 0.1
- * @return bool
+ * @since 0.0.1* @return bool
  */
 function av_register_check( $login, $email, $errors ) {
 
